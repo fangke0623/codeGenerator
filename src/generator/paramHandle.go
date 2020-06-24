@@ -8,7 +8,7 @@ import (
 )
 
 func Generator() {
-	s := "f_user"
+	s := "d_discuss"
 	table := SelectTable(s)
 	tableName := TableName{}
 	tableName.TableName = s
@@ -17,7 +17,7 @@ func Generator() {
 	export := Export{Table: table, TableName: tableName}
 	PojoGenerator(export)
 	FormGenerator(export)
-	DaoGenerator(export)
+	//DaoGenerator(export)
 }
 
 func SelectTable(s string) []Table {
@@ -37,7 +37,12 @@ func SelectTable(s string) []Table {
 func PojoGenerator(export Export) {
 
 	pojoTmpl, _ := template.ParseFiles("./template/pojoTemplate.txt")
-	pojoFile, err := os.OpenFile("./user/"+export.TableName.PackageName+".go", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	_ = os.Mkdir("./generator/", os.ModePerm)
+	err := os.Mkdir("./generator/"+export.TableName.PackageName, os.ModePerm)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	pojoFile, err := os.OpenFile("./generator/"+export.TableName.PackageName+"/"+export.TableName.PackageName+".go", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -48,7 +53,8 @@ func PojoGenerator(export Export) {
 }
 func FormGenerator(export Export) {
 	formTmpl, _ := template.ParseFiles("./template/formTemplate.txt")
-	formFile, err := os.OpenFile("./user/"+export.TableName.PackageName+"Form.go", os.O_RDWR|os.O_CREATE, os.ModePerm)
+
+	formFile, err := os.OpenFile("./generator/"+export.TableName.PackageName+"/"+export.TableName.PackageName+"Form.go", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		log.Println(err.Error())
 	}
