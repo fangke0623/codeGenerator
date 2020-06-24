@@ -1,0 +1,8 @@
+package {{.TableName}}
+
+type {{.TableName}} struct {
+
+{{range .Table}}//{{.Comment}}
+    {{.ColumnName}}   {{if eq .DataType "varchar"}} string{{end}} {{if eq .DataType "datetime"}} time.Time {{end}}{{if eq .DataType "int"}} int64 {{end}}{{if eq .DataType "tinyint"}} int64 {{end}}
+    {{end}}
+}
