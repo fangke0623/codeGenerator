@@ -1,8 +1,8 @@
-package {{.TableName}}
+package {{.TableName.PackageName}}
 
-type {{.TableName}} struct {
-
-{{range .Table}}//{{.Comment}}
-    {{.ColumnName}}   {{if eq .DataType "varchar"}} string{{end}} {{if eq .DataType "datetime"}} time.Time {{end}}{{if eq .DataType "int"}} int64 {{end}}{{if eq .DataType "tinyint"}} int64 {{end}}
+type {{.TableName.ClassName}} struct {
+{{range .Table}}
+    //{{.Comment}}
+    {{.PojoName}} {{if eq .DataType "varchar"}} string{{end}} {{if eq .DataType "datetime"}} time.Time {{end}}{{if eq .DataType "int"}} int64 {{end}}{{if eq .DataType "tinyint"}} int64 {{end}}{{if eq .DataType "text"}} string {{end}} `json:"{{.JsonName}}" db:"{{.ColumnName}}"`
     {{end}}
 }

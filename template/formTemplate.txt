@@ -1,0 +1,8 @@
+package {{.TableName.PackageName}}
+
+type Form struct {
+{{range .Table}}
+    //{{.Comment}}
+    {{.PojoName}} string `json:"{{.JsonName}}"`
+    {{end}}
+}

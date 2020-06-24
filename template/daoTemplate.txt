@@ -1,0 +1,84 @@
+package user
+
+import (
+	"log"
+)
+
+func SelectList(form Form) []User {
+	var list []User
+	mysql := config.Mysql
+	queryString := "select * from f_user"
+	if form.Id != "" {
+		queryString += " where id = " + form.Id
+	}
+	queryString += " order by modify_time"
+	if form.PageSize != "" && form.CurrentPage != "" {
+		queryString += " limit " + query.GetStartRow(form.Page) + " , " + form.PageSize
+	}
+	err := mysql.Select(&list, queryString)
+	if err != nil {
+		log.Println(err)
+	}
+	return list
+}
+
+func Save(user User) {
+	mysql := config.Mysql
+	tx := mysql.MustBegin()
+	result, err := tx.NamedExec("insert into f_user values ({{range .Table}}:{{.ColumnName}},{{end}})", &user)
+	if err != nil {
+		log.Println(err)
+	}
+	err = tx.Commit()
+	if result != nil {
+		log.Println(result)
+	}
+
+	if err != nil {
+		log.Println(err)
+	}
+}
+func GetById(id string) User {
+	var user = User{}
+    mysql := config.Mysql
+    queryString := "select * from f_user where id = \"" + id + "\" limit 1"
+    err := mysql.Get(&user, queryString)
+    if err != nil {
+        log.Println(err)
+    }
+
+
+
+
+	return user
+}
+func UpdateById(user User) {
+	mysql := config.Mysql
+	tx := mysql.MustBegin()
+	queryString := "update f_user set "
+	if user.Password != "" {
+		queryString += "password=:password,"
+	}
+	if user.Nickname != "" {
+		queryString += "nickname=:nickname,"
+	}
+	if user.Mobile != "" {
+		queryString += "mobile=:mobile,"
+	}
+	if user.Email != "" {
+		queryString += "email=:email,"
+	}
+	queryString += "modify_time=:modify_time where id=:id"
+	result, err := tx.NamedExec(queryString, &user)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = tx.Commit()
+	if result != nil {
+		log.Println(result)
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
