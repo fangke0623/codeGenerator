@@ -13,7 +13,7 @@ func GetJsonParam(s string) string {
 		if y != 0 {
 			for i := 0; i < len(vv); i++ {
 				if i == 0 {
-					vv[i] -= 32
+					vv[i] -= 32               // string的码表相差32位
 					upperStr += string(vv[i]) // + string(vv[i+1])
 				} else {
 					upperStr += string(vv[i])
@@ -40,10 +40,10 @@ func GetPojoParam(s string) string {
 }
 func Capitalize(str string) string {
 	var upperStr string
-	vv := []rune(str) // 后文有介绍
+	vv := []rune(str)
 	for i := 0; i < len(vv); i++ {
 		if i == 0 {
-			if vv[i] >= 97 && vv[i] <= 122 { // 后文有介绍
+			if vv[i] >= 97 && vv[i] <= 122 {
 				vv[i] -= 32 // string的码表相差32位
 				upperStr += string(vv[i])
 			} else {
