@@ -1,0 +1,120 @@
+{
+  "class_id": "CepriDevice",
+  "class_name": {
+    "en": "CepriDevice",
+    "zh": "电科院设备管理"
+  },
+  "modules": [
+    {
+      "pid": "{{.Pid}}",
+      "table": {
+        "cols": [
+          {{range .ModelRelated}}
+          {{range .AttributesRelated}}
+          {
+            "col_name": {
+              "en": "{{.Key}}",
+              "zh": "{{.Name}}"
+            },
+            "key": "{{.Key}}",
+          {{if eq .FieldType 0}}
+            "type": "int",
+            "display_type": "enum",
+            "is_enum": true,
+            "enum_list": [
+             {{ $size := .NumSize}}
+                {{range $k, $v := .EnumExpand}}
+                {{if eq $k $size}}
+                  {
+                    "enum": {{$v.EnumKey}},
+                    "enum_name": {
+                      "en": "{{$v.EnumValue}}",
+                      "zh": "{{$v.EnumValue}}"
+                    }
+                  }
+                  {{else}}
+                  {
+                      "enum": {{$v.EnumKey}},
+                      "enum_name": {
+                        "en": "{{$v.EnumValue}}",
+                        "zh": "{{$v.EnumValue}}"
+                      }
+                    },
+                  {{end}}
+                  {{end}}
+                  ],
+          {{end}}
+          {{if eq .FieldType 1}}
+             "type": "int",
+             "display_type": "int",
+             "multiple": {{.NumExpand.Multiple}},
+             "min": {{.NumExpand}}{{.ValueMin}},
+             "max": {{.NumExpand.ValueMax}},
+             "step": {{.NumExpand.Step}},
+             "unit": {{.NumExpand.Unit}},
+          {{end}}
+        {{if eq .FieldType 2}}
+              "type": "VARCHAR",
+              "type_len": {{.StringExpand.Length}},
+              "display_type": "{{.StringExpand.StringType}}",
+        {{end}}
+            {{if eq .Extend.DefaultValue nil}}
+            "default": null,
+            {{else}}
+             "default": "{{.Extend.DefaultValue}}",
+            {{end}}
+             "not_null": {{if eq .Extend.IsNull 0}} false {{else}} true{{end}},
+             "rw": 3,
+             "can_display": {{if eq .Extend.IsShow 0}} false {{else}} true{{end}},
+             "must": {{if eq .Extend.IsMust 0}} false {{else}} true{{end}},
+             "is_display": {{if eq .Extend.DefaultShow 0}} false {{else}} true{{end}}
+          },
+    {{end}}
+    {{end}}
+          {
+            "col_name": {
+              "en": "projectid",
+              "zh": "项目ID"
+            },
+            "key": "projectid",
+            "type": "CHAR",
+            "not_null": true,
+            "default": "",
+            "must": false,
+            "empty_value": null,
+            "rw": 3,
+            "type_len": 32,
+            "ref_from": null,
+            "is_enum": false,
+            "enum_list": null,
+            "num": null,
+            "can_display": false,
+            "is_display": false,
+            "ref_can_display": false,
+            "uniquedisplay": false,
+            "display_type": "singleline",
+            "fixed": false,
+            "canbeempty": true,
+            "is_task_column": false
+          }
+        ],
+        "expand": ""
+      },
+      "def_filters": null,
+      "history_record": {
+        "policy": "none"
+      },
+      "pid_name": {
+        "en": "Device management",
+        "zh": "{{.Name}}"
+      },
+      "def_roles": "",
+      "expand": "",
+      "task_related": false,
+      "is_common_vt": false,
+      "ifttt": 3
+    }
+  ],
+  "expand": "",
+  "state": 1
+}

@@ -1,8 +1,53 @@
-package {{.TableName.PackageName}}
+package module
+
+import (
+	. "cepriplatform/common"
+)
 
 type {{.TableName.ClassName}} struct {
 {{range .Table}}
     //{{.Comment}}
     {{.PojoName}} {{if eq .DataType "varchar"}} string{{end}} {{if eq .DataType "datetime"}} time.Time {{end}}{{if eq .DataType "int"}} int64 {{end}}{{if eq .DataType "tinyint"}} int64 {{end}}{{if eq .DataType "text"}} string {{end}} `json:"{{.JsonName}}" db:"{{.ColumnName}}"`
     {{end}}
+}
+
+
+
+
+type Attributes struct {
+	BaseStruct
+	Fieldtype      int    	`json:"fieldType" `
+	Fieldremark    string 	`json:"fieldRemark" `
+	Attributestype int 		`json:"attributesType" `
+	Fieldexpand    NullString `json:"fieldExpand" `
+}
+
+func (a *Attributes) GetTableName() string {
+
+	return "CepriProduct_000000000000000000000000d0880100"
+}
+func (a *Attributes) GetDid() string {
+
+	return a.Did
+}
+func (a *Attributes) Insert() (int,string) {
+	tx := MyDB.MysqlGorm.Begin()
+	Debug("insert data,mysql " + a.GetTableName() + ":")
+	tx.Table(a.GetTableName()).Create(a)
+	if tx.Error != nil {
+		Error("fail to insert mysql "+a.GetTableName()+":", tx.Error)
+		return ErrMysql,""
+	}else {
+		tx.Commit()
+	}
+	return Success,""
+}
+
+func (a *Attributes) List() (int,string)  {
+
+	tx := MyDB.MysqlGorm.Begin()
+
+	tx.Table(a.GetTableName()).Where("")
+
+	return Success,""
 }
